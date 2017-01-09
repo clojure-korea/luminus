@@ -1,38 +1,34 @@
-## Guestbook Application
+## 방명록 애플리케이션
 
-This tutorial will guide you through building a simple guestbook application using Luminus.
-The guestbook allows users to leave a message and to view a list of messages left by others.
-The application will demonstrate the basics of HTML templating, database access, and
-project architecture.
+이 튜토리얼은 루미너스로 간단한 방명록 애플리케이션을 만드는 방법을 알려줍니다.
+방명록은 사용자가 메시지를 남기고 다른 사람들이 메시지 목록을 볼 수 있는 애플리케이션입니다.
+이 애플리케이션을 만들어 보면서 기본적인 HTML 템플릿, 데이터베이스 접근, 프로젝트 구조를 설명하려고 합니다.
 
-If you don't have a preferred Clojure editor already, then it's recommended that you use [Light Table](http://www.lighttable.com/) to follow along with this tutorial.
+아직 클로저 에디터가 없다면 [Light Table](http://www.lighttable.com/)로 튜토리얼을 따라서 만들어 보는 것을 추천합니다.
 
-### Using the Docker Image
+### 도커 이미지 사용하기
 
-If you're using Docker, then you can follow these steps to get up and running:
+도커를 사용한다면 다음과 같이 실행합니다:
 
 1. `docker pull danboykis/luminus-guestbook`
 2. `docker run -p 3000:3000 -p 7000:7000 -it danboykis/luminus-guestbook`
 
-If you prefer to build your own docker image follow the directions [here](https://github.com/luminus-framework/luminus-docker)
+도커 이미지를 만들어서 빌드하려면 [여기](https://github.com/luminus-framework/luminus-docker)를 참조하세요
 
-### Installing JDK
+### JDK 설치
 
-Clojure runs on the JVM and requires a copy of JDK to be installed. IF you don't
-have JDK already on your system then OpenJDK is recommended and can be downloaded
-[here](http://www.azul.com/downloads/zulu/). Note that Luminus requires JDK 8 to
-work with the default settings.
+클로저는 JVM에서 동작하기 때문에 JDK가 설치되어 있어야 합니다. JDK가 없다면 [여기](http://www.azul.com/downloads/zulu/)
+에서 OpenJDK를 다운로드 받아서 설치하는 것을 추천합니다. Luminus는 기본적으로 JDK 8에 동작합니다.
 
-### Installing Leiningen
+### Leiningen 설치
 
-You need to have [Leiningen](http://leiningen.org/) installed in
-order to work with Luminus. Installing Leiningen is accomplished by
-following the step below.
+Luminus를 사용하려면 [Leiningen](http://leiningen.org/)이 설치되어 있어야 합니다.
+Leiningen은 다음과 같이 설치합니다.
 
-1. Download the script.
-3. Set it to be executable. (eg: chmod +x lein)
-2. Place it on your $PATH. (eg: ~/bin)
-4. Run `lein` and wait for the self-installation to complete.
+1. 스크립트 파일 다운로드
+3. 스크립트를 실행 가능 하도록 권한 설정 (예: chmod +x lein)
+2. 어디서나 실행 가능한 $PATH에 위치 시키기 (예: ~/bin)
+4. `lein` 명령어를 실행하고 설치가 되기를 기다린다.
 
 ```
 wget https://raw.github.com/technomancy/leiningen/stable/bin/lein
@@ -41,21 +37,21 @@ mv lein ~/bin
 lein
 ```
 
-### Creating a new application
+### 새로운 애플리케이션 만들기
 
-Once you have Leiningen installed you can run the following commands in your terminal to
-initialize your application:
+Leiningen을 설치하고 터미널에 다음과 같이 입력하면 애플리케이션을 생성할 수 있습니다:
 
 ```
 lein new luminus guestbook +h2
 cd guestbook
 ```
 
-The above will create a new template project with the support for [H2 embedded database](http://www.h2database.com/html/main.html) engine.
+위 명령어는 [H2 임베디드 데이터베이스](http://www.h2database.com/html/main.html) 엔진을 지원하는
+탬플릿 프로젝트를 만드는 예제 입니다.
 
-### Anatomy of a Luminus application
+### Luminus 애플리케이션 구조
 
-The newly created application has the following structure:
+생성된 애플리케이션은 아래와 같은 구조 입니다:
 
 ```
 guestbook
@@ -125,31 +121,31 @@ guestbook
                 └── handler.clj
 ```
 
-Let's take a look at what the files in the root folder of the application do:
+최상위 폴더에 있는 파일 부터 살펴봅시다:
 
-* `Procfile` - used to facilitate Heroku deployments
-* `README.md` - where documentation for the application is conventionally put
-* `project.clj` - used to manage the project configuration and dependencies by Leiningen
-* `profiles.clj` - used for local configuration that should not be checked into the code repository
-* `.gitignore` - a list of assets, such as build generated files, to exclude from Git
+* `Procfile` - Heroku 배포에 사용
+* `README.md` - 일반적인 애플리케이션 문서
+* `project.clj` - Leiningen 파일로 프로젝트 설정이나 의존성을 관리
+* `profiles.clj` - 리파지토리에 포함하지 않는 로컬 설정을 하기 위해 사용
+* `.gitignore` - 빌드 생성 파일과 같은 Git에 포함하지 않는 파일 목록
 
-### The Source Directory
+### 소스 디렉토리
 
-All our code lives under the `src/clj` folder. Since our application is called guestbook, this
-is the root namespace for the project. Let's take a look at all the namespaces that have been created for us.
+모든 소스 코드는 `src/clj` 폴더 아래 옵니다. 우리가 만드는 방명록 애플리케이션은 guestbook가 프로젝트의
+최상위 네임스페이스입니다. 이 아래 생성된 다른 네임스페이스에 대해 살펴 봅시다.
 
 #### guestbook
 
-* `core.clj` - this is the entry point for the application that contains the logic for starting and stopping the server
-* `handler.clj` - defines the base routes for the application, this is the entry point into the application
-* `layout.clj` - a namespace for the layout helpers used to render the content for our pages
-* `middleware.clj` - a namespace that contains custom middleware for the application
+* `core.clj` - 서버 시작과 종료 로직을 가지고 있는 애플리케이션의 엔트리 포인트
+* `handler.clj` - 애플리케이션의 기본 라우트를 정의
+* `layout.clj` - 페이지에 내용을 렌더링 하기 위한 레이아웃 헬퍼 네임스페이스
+* `middleware.clj` - 애플리케이션에 필요한 미들웨어를 가지고 있는 네임스페이스
 
 #### guestbook.db
 
-The `db` namespace is used to define the model for the application and handle the persistence layer.
+`db` 네임스페이스는 애플리케이션의 영속 레이어를 다루고 모델을 정의 합니다.
 
-* `core.clj` - used to house the functions for interacting with the database
+* `core.clj` - 데이터베이스를 조작하는 함수들이 위치
 
 #### guestbook.routes
 
